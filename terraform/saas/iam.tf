@@ -95,6 +95,13 @@ resource "aws_iam_role_policy" "stack_processor" {
         Effect   = "Allow"
         Action   = ["sqs:SendMessage"]
         Resource = aws_sqs_queue.processor_dlq.arn
+      },
+      {
+        # INTERIM: Gemini API key access — remove when switching to Bedrock
+        Sid      = "GeminiSecret"
+        Effect   = "Allow"
+        Action   = ["secretsmanager:GetSecretValue"]
+        Resource = "arn:aws:secretsmanager:*:${data.aws_caller_identity.current.account_id}:secret:${var.project}/gemini-*"
       }
     ]
   })
